@@ -6,6 +6,8 @@ This project analyzes insurance operational data and customer feedback to evalua
 
 The dashboard was developed using **Power BI**, with sentiment scoring implemented via **Python (TextBlob)**.
 
+**PowerBI Project Link**: [Insurance Data Analysis.pbix](https://app.powerbi.com/links/Amp_dpANyx?ctid=35ae1710-01c9-4681-aee5-aefcb73885b1&pbi_source=linkShare)
+
 > **Note:** Due to the limitations of the Power BI Free version, the built-in *AI Insights (Text Analytics)* feature was not available. Therefore, sentiment analysis was performed using Python scripting.
 
 ---
