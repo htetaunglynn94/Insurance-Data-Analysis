@@ -1,69 +1,78 @@
-# 📊 Insurance Data Analysis (Basic Power BI Project)
+# 📊 Insurance Data Analysis (Power BI Project)
 
 ## Project Overview
 
-This project analyzes insurance data and customer feedback data to evaluate **operation effectiveness** and **customer satisfaction**, identify **service performance gaps** using sentiment analysis.
+This project analyzes insurance operational data and customer feedback to evaluate **business performance** and **customer satisfaction**. The objective is to identify **service gaps**, uncover **behavioral patterns**, and generate **data-driven insights** using sentiment analysis.
 
-The dashboard was developed in **Power BI**, with sentiment scoring powered by **Python (TextBlob)**.
+The dashboard was developed using **Power BI**, with sentiment scoring implemented via **Python (TextBlob)**.
 
-**Note**: Since I can't afford to use premium licence, `Text Analytics` in `AI Insights` is not included in my PowerBI Desktop. The similar operation was run using python script.
+> **Note:** Due to the limitations of the Power BI Free version, the built-in *AI Insights (Text Analytics)* feature was not available. Therefore, sentiment analysis was performed using Python scripting.
 
 ---
 
-## 🎯 Objectives
+## Objectives
 
-* `Policy Number`, `Claimed Number` and `Customer ID` are used to filter all of the charts in REPORT view.
-* Show `Premium Amount`, `Claimed Amount` and `Coverage Amount`
-* Identify patterns in order to sentiment score
-* Detect hidden trends affecting customer experience
-* Provide actionable business insights
+🔹 Enable interactive filtering using `Policy Number`, `Claim Number`, and `Customer ID`
+
+🔹 Analyze key financial metrics:  
+  * Premium Amount
+  * Claim Amount
+  * Coverage Amount
+
+🔹 Evaluate Active vs Inactive policy distribution  
+🔹 Analyze customer segmentation by Age Group  
+🔹 Examine insurance investment patterns by gender  
+🔹 Measure customer satisfaction using sentiment analysis  
+🔹 Provide actionable business insights
 
 ---
 
 ## Dataset Information
 
 * Source 1: [Insurance Data.csv](https://github.com/user-attachments/files/26845606/Insurance.Data.csv)
-* Source 2: [Insurance_customer_feedback.xlsx](https://github.com/user-attachments/files/26845618/insurance_customer_feedback.xlsx)
+* Source 2: [Insurance Customer Feedback.xlsx](https://github.com/user-attachments/files/26845618/insurance_customer_feedback.xlsx)
 
 ---
 
-## ⚙️ Data Mining & Processing Steps
+## Data Mining & Processing Steps
 
-### Data Loading
-* Imported `Insurance Data.csv` into SQL server to create database 
-* Imported database file into Power BI for new practice
-* Loaded `Insurance_customer_feedback.xlsx` 
+### 1️⃣ Data Loading
+
+* Imported `Insurance Data.csv` into **SQL Server** to simulate a database environment
+* Connected SQL Server database to **Power BI**
+* Loaded customer feedback dataset (`.xlsx`) into Power BI
 
 ---
 
-### Data Cleaning
+### 2️⃣ Data Preprocessing
 
-* Insurance dataset
-    * Verify data type and structure
-    * Standardized column names
-    * Created conditional columns for `Age Group`
-    * Created **Role Level Security**
-    * Created **Pinned Dashboard**
-* Customer Feedback dataset
-    * Sentiment Feedback analysis using python script
-    * Used **TextBlob** for sentiment scoring
-    * Generated:
-        * Polarity Score → range (-1 to +1)
-        * Satisfaction Score → normalized (0 to 1)
+#### 🔹 Insurance Dataset
+
+* Validated data types and structure
+* Standardized column naming conventions
+* Created derived column: **Age Group**
+* Implemented **Row-Level Security (RLS)**
+* Published and configured **Pinned Dashboard**
+
+#### 🔹 Customer Feedback Dataset
+
+* Performed sentiment analysis using Python
+* Applied **TextBlob** for NLP scoring
+* Generated:
+
+  * **Polarity Score** (range: -1 to +1)
+  * **Satisfaction Score** (normalized: 0 to 1)
 
 ```python
 from textblob import TextBlob
 import pandas as pd
 
-# Clean column names (important for Power BI)
 dataset.columns = dataset.columns.str.strip()
 
-# Calculate polarity (-1 to +1)
 dataset['Polarity'] = dataset['Feedback'].apply(
     lambda x: TextBlob(str(x)).sentiment.polarity
 )
 
-# Convert to positive satisfaction score (0 to 1)
 dataset['Satisfaction Score'] = dataset['Polarity'].apply(
     lambda x: round((x + 1) / 2, 4)
 )
@@ -71,89 +80,119 @@ dataset['Satisfaction Score'] = dataset['Polarity'].apply(
 
 ---
 
-### Data Visualization (Power BI)
-1. Overview
-    * Stacked bar chart
-    * Donut chart
-    * 3 x Slicers
-    * 3 x Cards
-    * Ribbon chart
-    * Matrix
-    * Multi-row card
-    * Line chart with shaded area
+### 3️⃣ Data Visualization (Power BI)
 
-2. Table    
-    * Show all the data of `Insurance` dataset
+#### Report Pages
 
-3. Feedback
-    * WordCloud
-    * Table
-    * Stacked Bar Chart
+**Overview**
+
+* Stacked Bar Chart
+* Donut Chart
+* Slicer
+* KPI Card
+* Ribbon Chart
+* Matrix
+* Multi-row Card
+* Line Chart with Area
+
+**Table**
+
+* Detailed tabular view of insurance dataset
+
+**Feedback**
+
+* Word Cloud
+* Table
+* Stacked Bar Chart
+
+**Insights**
+
+* Summary visuals highlighting key findings
+
 ---
 
-### Data Mining
+### 4️⃣ Data Analysis & Insights
 
-#### Insurance Data analysis
+#### Insurance Data Analysis
 
-* Grouping Age
+**Age Group Distribution**
 
-    |   Age   | Level  | Ratio  |
-    | ------- | ------ | ------ |
-    | &le; 30 | Youth  | 18.88% |
-    | &le; 60 | Adult  | 42.92% |
-    | >  60   | Senior | 38.19% |
+| Age Range | Group  | Ratio  |
+| --------- | ------ | ------ |
+| ≤ 30      | Youth  | 18.88% |
+| ≤ 60      | Adult  | 42.92% |
+| > 60      | Senior | 38.19% |
 
-👉 **Insight**:
+**Key Insights**
 
-As per Age Group statistics:- 
-* Most of the Adult and Senior people are invested for insurance.
-* The most total claim amount by age group is Adults followed by Seniors.
-* Travel insurance is the most Premium and Claim Amount
+* Adults and Seniors represent the **largest proportion of policyholders**
+* The **highest claim amounts** are observed in the Adult group, followed by Seniors
+* **Travel insurance** has the highest adoption rate among policy types
+* Gender-based investment patterns:
+
+  * `Males` → higher in **Health** and **Home** insurance
+  * `Females` → higher in **Travel** and **Life** insurance
+* Observed anomaly:
+
+  * Total **Claim Amount exceeds Premium Amount**, indicating potential issues such as:
+
+    * aggregation bias
+    * missing non-claim records
+    * data inconsistency or
+    * incompleted dataset
+    
+* **Coverage Amount** remains highest as it represents maximum insured limits
+
+---
 
 #### Customer Feedback Analysis
 
-* `Satisfaction` was grouped from `Sentiment Score`
+**Satisfaction Classification**
 
-| Sentiment Score    | Satisfaction        |No. of Customers|
-| -------- | --------------------|----------------|
-|&ge; 0.8  |  Excellent          |       27       |
-|&ge; 0.6  |  Good               |       39       |
-|   < 0.6  |  Need improvement   |       31       |
+| Sentiment Score | Satisfaction Level | No. of Customers |
+| --------------- | ------------------ | ---------------- |
+| ≥ 0.8           | Excellent          | 27               |
+| ≥ 0.6           | Good               | 39               |
+| < 0.6           | Needs Improvement  | 31               |
 
+**Key Insights**
 
-👉 **Insight**:
-* Service is needed to be improved:-
-    * Improve response time
-    * Consider for price rating
-    * Compact documentation
-    * Reduce unnecessary procedures
-    * Enhance communication clarity
-    * Offer proactive support
+* A significant portion of customers fall into the **“Needs Improvement”** category
+* Common improvement areas identified:
+
+  * Response time
+  * Pricing perception
+  * Documentation complexity
+  * Process efficiency
+  * Communication clarity
+  * Proactive customer support
+
 ---
 
 ## Conclusion
 
-This analysis reveals that while customer sentiment is generally positive, there are significant opportunities to:
+This analysis highlights that while the insurance business demonstrates **strong customer participation**, there are notable opportunities to improve both **operational efficiency** and **customer experience**.
 
-* Improve consistency
-* Convert neutral users into satisfied customers
-* Address recurring service issues
+From an operational perspective, the imbalance between **Claim Amount and Premium Amount** suggests potential data limitations or structural inefficiencies that require further validation and refinement. Additionally, customer distribution indicates that **Adults and Seniors are the primary contributors** to both revenue and claims.
 
-These improvements can lead to **higher retention and better customer experience**.
+From a customer experience perspective, sentiment analysis reveals that although many customers report satisfactory experiences, a considerable segment remains **unsatisfied or neutral**, indicating gaps in service delivery. Key drivers of dissatisfaction include **slow response times, complex procedures, and unclear communication**.
+
+Overall, improving service consistency, simplifying processes, and enhancing responsiveness can significantly increase customer satisfaction and business performance. Furthermore, incorporating more comprehensive data (including non-claim records) and advanced analytics models would strengthen future insights.
 
 ---
 
 ## Tools Used
 
-* Power BI (Visualization)
-* Python (TextBlob for NLP)
-* Excel / CSV (Data Source)
+* Power BI (Data Visualization)
+* Python (TextBlob for Sentiment Analysis)
+* SQL Server (Data Storage & Integration)
+* Excel / CSV (Data Sources)
 
 ---
 
 ## Contact
 
-If you have any feedback or opportunities, feel free to connect!
+If you have feedback or opportunities, feel free to connect:
 
 * [LinkedIn](https://www.linkedin.com/in/htet-aung-lynn-64ba06146/)
 * [GitHub](https://github.com/htetaunglynn94)
